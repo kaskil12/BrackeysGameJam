@@ -81,9 +81,14 @@ public class PlayerMovement : MonoBehaviour
         UpdateHandPosition();
         Look();
         IconDisplay();
+        Jumping();
         if (Input.GetMouseButtonDown(1))
         {
             Aiming = !Aiming;
+        }
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            crouched = !crouched;
         }
         //Drop current item in inventory
         if(Input.GetKeyDown(KeyCode.Q)){
@@ -130,16 +135,18 @@ public class PlayerMovement : MonoBehaviour
     }
     void IconDisplay(){
         //Get the image from each inventory item and display it in the UI
-        MonoBehaviour[] inventoryScripts = Inventory[CurrentObject].GetComponents<MonoBehaviour>();
-        foreach (var script in inventoryScripts)
-        {
-            MethodInfo equipMethod = script.GetType().GetMethod("Equip");
-            if (equipMethod != null)
-            {
-                equipMethod.Invoke(script, null);
-                break;
-            }
-        }
+        // if (Inventory[CurrentObject] != null){
+        // MonoBehaviour[] inventoryScripts = Inventory[CurrentObject].GetComponents<MonoBehaviour>();
+        // foreach (var script in inventoryScripts)
+        // {
+        //     MethodInfo equipMethod = script.GetType().GetMethod("Equip");
+        //     if (equipMethod != null)
+        //     {
+        //         equipMethod.Invoke(script, null);
+        //         break;
+        //     }
+        // }
+        // }
     }
     void ChangeCurrentObject(int NewCurrentObject){
         if(Inventory[NewCurrentObject] == null){
@@ -163,10 +170,34 @@ public class PlayerMovement : MonoBehaviour
             Inventory[CurrentObject] = Object;
             Inventory[CurrentObject].transform.position = HandObject.transform.position;
             Inventory[CurrentObject].transform.rotation = HandObject.transform.rotation;
+            if (Inventory[CurrentObject] != null){
+                MonoBehaviour[] inventoryScripts = Inventory[CurrentObject].GetComponents<MonoBehaviour>();
+                foreach (var script in inventoryScripts)
+                {
+                    MethodInfo equipMethod = script.GetType().GetMethod("Equip");
+                    if (equipMethod != null)
+                    {
+                        equipMethod.Invoke(script, null);
+                        break;
+                    }
+                }
+            }
         }
     }
-    void HandDrop(){
+    public void HandDrop(){
         if(Inventory[CurrentObject] != null){
+            if (Inventory[CurrentObject] != null){
+                MonoBehaviour[] inventoryScripts = Inventory[CurrentObject].GetComponents<MonoBehaviour>();
+                foreach (var script in inventoryScripts)
+                {
+                    MethodInfo equipMethod = script.GetType().GetMethod("Unequip");
+                    if (equipMethod != null)
+                    {
+                        equipMethod.Invoke(script, null);
+                        break;
+                    }
+                }
+            }
             Inventory[CurrentObject].GetComponent<Rigidbody>().isKinematic = false;
             Inventory[CurrentObject].GetComponent<MeshCollider>().enabled = true;
             Inventory[CurrentObject].transform.position = HandObject.transform.position;
@@ -182,12 +213,10 @@ public class PlayerMovement : MonoBehaviour
             Inventory[CurrentObject].transform.position = Vector3.Lerp(Inventory[CurrentObject].transform.position, HandObject.transform.position, InventoryLerpSpeed * Time.deltaTime);
             Inventory[CurrentObject].transform.rotation = Quaternion.Slerp(Inventory[CurrentObject].transform.rotation, HandObject.transform.rotation, Mathf.Clamp01(InventoryLerpSpeed * Time.deltaTime));
         }
-        if(IsGrounded && !Sliding){
+        if(IsGrounded){
             HandleInput();
         }
-        ApplySlideForce();
         SlidingMechanics();
-        Jumping();
     }
     void Look(){
         if (Looks)
@@ -245,46 +274,34 @@ public class PlayerMovement : MonoBehaviour
         Jumpable = true;
     }
 
+    bool crouched;
+    float crouchspeed = 10000;
     void SlidingMechanics()
     {
-        if (Input.GetKey(KeyCode.C) && IsGrounded)
+        if (crouched)
         {
-            if (Input.GetKeyDown(KeyCode.C) && !Sliding)
-            {
-                Sliding = true;
-            }
-
-            Sliding = true;
-            GetComponentInChildren<CapsuleCollider>().material.dynamicFriction = 0;
-            GetComponentInChildren<CapsuleCollider>().material.staticFriction = 0f;
-            CapsuleHeight = Mathf.Lerp(CapsuleHeight, 1, 0.05f);
-            rb.drag = 0.2f;
-            rb.mass = 10;
+            CapsuleHeight = 1;
         }
         else
         {
-            Sliding = false;
-            GetComponentInChildren<CapsuleCollider>().material.dynamicFriction = 0.6f;
-            GetComponentInChildren<CapsuleCollider>().material.staticFriction = 0.6f;
-            GetComponentInChildren<CapsuleCollider>().height = CapsuleHeight;
-            rb.mass = 1;
-            CapsuleHeight = Mathf.Lerp(CapsuleHeight, 2, 0.05f);
-            hasAppliedForce = false;
+            CapsuleHeight = 2;
         }
 
-        GetComponentInChildren<CapsuleCollider>().height = CapsuleHeight;
+        float currentHeight = GetComponentInChildren<CapsuleCollider>().height;
+        float targetHeight = Mathf.Lerp(currentHeight, CapsuleHeight, crouchspeed * Time.deltaTime);
+        GetComponentInChildren<CapsuleCollider>().height = targetHeight;
     }
 
-    void ApplySlideForce()
-    {
-        if (Sliding && !hasAppliedForce && SlidAble && rb.velocity.magnitude > 1)
-        {
-            Debug.Log("Force");
-            StartCoroutine(SlideForceDelay());
-            rb.AddForce(transform.forward * 20 * Time.deltaTime, ForceMode.VelocityChange);
-            hasAppliedForce = true;
-        }
-    }
+    // void ApplySlideForce()
+    // {
+    //     if (Sliding && !hasAppliedForce && SlidAble && rb.velocity.magnitude > 1)
+    //     {
+    //         Debug.Log("Force");
+    //         StartCoroutine(SlideForceDelay());
+    //         rb.AddForce(transform.forward * 20 * Time.deltaTime, ForceMode.VelocityChange);
+    //         hasAppliedForce = true;
+    //     }
+    // }
 
     void UpdateHandPosition()
     {
