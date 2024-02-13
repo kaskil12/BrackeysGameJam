@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
     
 
     [Header("Interaction")]
-    public float RayLength = 5;
+    public float RayLength = 10;
 
     [Header("UI")]
     public TMP_Text InteractionText;

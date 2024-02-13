@@ -20,7 +20,7 @@ public class TennisBallScript : MonoBehaviour
             {
                 PlayerMovement player = GameObject.Find("Player").GetComponent<PlayerMovement>();
                 player.HandDrop();
-                GetComponent<Rigidbody>().AddForce(-1000, 0, 0);
+                GetComponent<Rigidbody>().AddForce(transform.forward * 10, ForceMode.Impulse);
             }
         }
     }
