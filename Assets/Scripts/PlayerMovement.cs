@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 using System.Reflection;
+using UnityEngine.SceneManagement;
+
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -57,17 +59,21 @@ public class PlayerMovement : MonoBehaviour
     //Icons displaying items in inventory
     public Image[] InventoryIcons;
     public TMP_Text MessageText;
+    public Image HitEffect;
+    public Color HitEffectColor;
 
     [Header("Audio")]
     public AudioSource Footsteps;
     public AudioSource JumpSound;
     public AudioSource LandSound;
     public AudioSource KeyPickup;
+    public AudioSource HitSound;
 
     // Start is called before the first frame update
     void Start()
     {
         InitializePlayer();
+        HitEffectColor = new Color(HitEffectColor.r, HitEffectColor.g, HitEffectColor.b, 0);
     }
 
     void InitializePlayer()
@@ -85,10 +91,18 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Color color = HitEffectColor;
+        HitEffect.color = color;
+
         UpdateHandPosition();
         Look();
         IconDisplay();
         Jumping();
+        //Fade the hit effect
+        if(HitEffectColor.a > 0){
+            Debug.Log(HitEffectColor.a + " Hit Effect Color");
+            HitEffectColor = new Color(HitEffectColor.r, HitEffectColor.g, HitEffectColor.b, Mathf.Lerp(HitEffectColor.a, 0, 0.1f * Time.deltaTime));
+        }
         if(rb.velocity.magnitude > 0.1f && IsGrounded && !Footsteps.isPlaying && !Running){
             Footsteps.Play();
         }else if(rb.velocity.magnitude < 0.1f && IsGrounded && Footsteps.isPlaying){
@@ -161,6 +175,25 @@ public class PlayerMovement : MonoBehaviour
         // }
         // }
     }
+    public void TakeDamage(float Damage){
+        Health -= Damage;
+        HitSound.Play();
+        HitEffectPlay();
+        if(Health <= 0){
+            Die();
+        }
+    }
+    public void HitEffectPlay(){
+        HitEffectColor = new Color(HitEffectColor.r, HitEffectColor.g, HitEffectColor.b, +.3f);
+    }
+    void Die(){
+        SendMessage("You Died");
+        StartCoroutine(Delay());
+    }
+    IEnumerator Delay(){
+        yield return new WaitForSeconds(3);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    }
     void ChangeCurrentObject(int NewCurrentObject){
         if(Inventory[NewCurrentObject] == null){
             Inventory[CurrentObject].SetActive(false);
@@ -224,6 +257,9 @@ public class PlayerMovement : MonoBehaviour
         }else{
             return false;
         }
+    }
+    public void RemoveKey(string Key){
+        KeyList.Remove(Key);
     }
     public void SendMessage(string Message){
         MessageText.text = Message;

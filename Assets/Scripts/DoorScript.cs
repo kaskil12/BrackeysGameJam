@@ -32,6 +32,7 @@ public class DoorScript : MonoBehaviour
             if(player.HasKey(KeyNeeded)){
                 Locked = false;
                 Opened = !Opened;
+                player.RemoveKey(KeyNeeded);
                 StartCoroutine(Delay());
             }else{
                 player.SendMessage("You Need a Key to Open This Door");
