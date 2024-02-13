@@ -56,6 +56,13 @@ public class PlayerMovement : MonoBehaviour
     public TMP_Text InteractionText;
     //Icons displaying items in inventory
     public Image[] InventoryIcons;
+    public TMP_Text MessageText;
+
+    [Header("Audio")]
+    public AudioSource Footsteps;
+    public AudioSource JumpSound;
+    public AudioSource LandSound;
+    public AudioSource KeyPickup;
 
     // Start is called before the first frame update
     void Start()
@@ -82,6 +89,11 @@ public class PlayerMovement : MonoBehaviour
         Look();
         IconDisplay();
         Jumping();
+        if(rb.velocity.magnitude > 0.1f && IsGrounded && !Footsteps.isPlaying && !Running){
+            Footsteps.Play();
+        }else if(rb.velocity.magnitude < 0.1f && IsGrounded && Footsteps.isPlaying){
+            Footsteps.Stop();
+        }
         if (Input.GetMouseButtonDown(1))
         {
             Aiming = !Aiming;
@@ -112,10 +124,11 @@ public class PlayerMovement : MonoBehaviour
                     string CurrentKey = InteractionHit.transform.gameObject.name;
                     InteractionHit.transform.gameObject.SetActive(false);
                     KeyList.Add(CurrentKey);
+                    KeyPickup.Play();
                 }
             }else if(InteractionHit.transform.tag == "Door"){
                 InteractionText.gameObject.SetActive(true);
-                InteractionText.text = "(E) To Open Door";
+                InteractionText.text = "(E) To Interact With Door";
                 if(Input.GetKeyDown(KeyCode.E)){
                     InteractionHit.transform.root.GetComponent<DoorScript>().Open();
                 }
@@ -205,7 +218,21 @@ public class PlayerMovement : MonoBehaviour
             Inventory[CurrentObject] = null;
         }
     }
-
+    public bool HasKey(string Key){
+        if(KeyList.Contains(Key)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public void SendMessage(string Message){
+        MessageText.text = Message;
+        StartCoroutine(MessageDelay());
+    }
+    IEnumerator MessageDelay(){
+        yield return new WaitForSeconds(3);
+        MessageText.text = "";
+    }
     void FixedUpdate()
     {
         if (Inventory[CurrentObject] != null)
@@ -250,20 +277,27 @@ public class PlayerMovement : MonoBehaviour
         }
 
     }
+    bool Landed = false;
         void Jumping(){
         IsGrounded = false;
         foreach(Collider i in Physics.OverlapSphere(JumpObject.transform.position, jumprad)){
             if(i.transform.tag != "Player"){
                 IsGrounded = true;
+                if(!Landed){
+                    LandSound.Play();
+                    Landed = true;
+                }
                 break;
             }
         }
         if(IsGrounded){
             if(Input.GetKeyDown(KeyCode.Space) && !Sliding && Jumpable == true){
                 StartCoroutine(JumpDelay());
+                JumpSound.Play();
                 rb.AddForce(transform.up * JumpPower, ForceMode.VelocityChange);
             }
         }
+        
         if(!Sliding){
             rb.drag = IsGrounded ? 15 : 0.1f;
         }
@@ -271,6 +305,7 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator JumpDelay(){
         Jumpable = false;
         yield return new WaitForSeconds(0.1f);
+        Landed = false;
         Jumpable = true;
     }
 
