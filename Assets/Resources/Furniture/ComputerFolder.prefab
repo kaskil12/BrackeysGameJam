@@ -550,7 +550,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6036596328193071582}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3355cb6086277e74a905e99417a34105, type: 3}
+  m_Script: {fileID: 11500000, guid: deaa6e2bd72764f4ebb2ed177c6e6cd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Anim: {fileID: 5579949582182158718}
@@ -564,9 +564,9 @@ MonoBehaviour:
   Health: 50
   Damage: 20
   Speed: 2
-  AttackRange: 3
+  AttackRange: 2
   ChaseRange: 7
-  AttackTimer: 2
+  AttackTimer: 3
 --- !u!195 &845707423305052738
 NavMeshAgent:
   m_ObjectHideFlags: 0
