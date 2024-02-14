@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5214455700657982222}
   m_Layer: 0
   m_Name: DoorHandle
-  m_TagString: Door
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -181,6 +181,7 @@ MonoBehaviour:
   DoorOpen: {fileID: 1839322493664080251}
   KeyNeeded: Key
   Locked: 0
+  thisDoor: 
 --- !u!65 &3915435184782522980
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -344,7 +345,7 @@ GameObject:
   - component: {fileID: 4907835080880424209}
   m_Layer: 0
   m_Name: DoorFrame
-  m_TagString: Door
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -451,7 +452,7 @@ GameObject:
   - component: {fileID: 255068858973527845}
   m_Layer: 0
   m_Name: Door
-  m_TagString: Door
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -10,11 +10,13 @@ public class DoorScript : MonoBehaviour
     public AudioSource DoorOpen;
     public string KeyNeeded;
     public bool Locked;
+    public string thisDoor;
     // Start is called before the first frame update
     void Start()
     {
         Locked = true;
         Opened = false;
+        thisDoor = gameObject.name;
     }
 
     // Update is called once per frame
@@ -26,8 +28,17 @@ public class DoorScript : MonoBehaviour
             DoorAnim.SetBool("Open", false);
         }
     }
-    public void Open(){
+    public void Open(){        
         if(Locked){
+            // Delete any Door that's close to this one but prevent it from deleting itself and its children
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1);
+            foreach (var hitCollider in hitColliders)
+            {
+                if (hitCollider.gameObject.tag == "Door" && hitCollider.gameObject != this.gameObject && hitCollider.gameObject.transform.parent != this.gameObject.transform)
+                {
+                    Destroy(hitCollider.gameObject);
+                }
+            }
             PlayerMovement player = GameObject.Find("Player").GetComponent<PlayerMovement>();
             if(player.HasKey(KeyNeeded)){
                 Locked = false;

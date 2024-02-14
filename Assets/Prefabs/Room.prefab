@@ -6526,7 +6526,7 @@ MonoBehaviour:
   - {fileID: 4500253154479587229}
   - {fileID: 2566298368190003547}
   - {fileID: 1625706397165719338}
-  testStaus: 01000100
+  testStaus: 01010101
 --- !u!1001 &395527008810437364
 PrefabInstance:
   m_ObjectHideFlags: 0
