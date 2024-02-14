@@ -144,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
                 InteractionText.gameObject.SetActive(true);
                 InteractionText.text = "(E) To Interact With Door";
                 if(Input.GetKeyDown(KeyCode.E)){
-                    InteractionHit.transform.root.GetComponent<DoorScript>().Open();
+                    InteractionHit.transform.GetComponent<DoorScript>().Open();
                 }
             }else if(InteractionHit.transform.root.tag == "HoldAble"){
                     InteractionText.gameObject.SetActive(true);
@@ -212,7 +212,7 @@ public class PlayerMovement : MonoBehaviour
     void HandPickup(GameObject Object){
         if(Inventory[CurrentObject] == null){
             Object.GetComponent<Rigidbody>().isKinematic = true;
-            Object.GetComponent<MeshCollider>().enabled = false;
+            Object.GetComponent<Collider>().enabled = false;
             Inventory[CurrentObject] = Object;
             Inventory[CurrentObject].transform.position = HandObject.transform.position;
             Inventory[CurrentObject].transform.rotation = HandObject.transform.rotation;

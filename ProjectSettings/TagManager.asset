@@ -8,6 +8,7 @@ TagManager:
   - Key
   - Door
   - HoldAble
+  - Enemy
   layers:
   - Default
   - TransparentFX
