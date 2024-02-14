@@ -101,7 +101,10 @@ public class PlayerMovement : MonoBehaviour
         //Fade the hit effect
         if(HitEffectColor.a > 0){
             Debug.Log(HitEffectColor.a + " Hit Effect Color");
-            HitEffectColor = new Color(HitEffectColor.r, HitEffectColor.g, HitEffectColor.b, Mathf.Lerp(HitEffectColor.a, 0, 0.1f * Time.deltaTime));
+            HitEffectColor = new Color(HitEffectColor.r, HitEffectColor.g, HitEffectColor.b, Mathf.Lerp(HitEffectColor.a, 0, 0.3f * Time.deltaTime));
+        }
+        if(Health < 100){
+            Health += 0.1f * Time.deltaTime;
         }
         if(rb.velocity.magnitude > 0.1f && IsGrounded && !Footsteps.isPlaying && !Running){
             Footsteps.Play();
@@ -197,6 +200,7 @@ public class PlayerMovement : MonoBehaviour
     void ChangeCurrentObject(int NewCurrentObject){
         if(Inventory[NewCurrentObject] == null){
             Inventory[CurrentObject].SetActive(false);
+            CurrentObject = NewCurrentObject;
             return;
         }
         CurrentObject = NewCurrentObject;
@@ -245,7 +249,7 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
             Inventory[CurrentObject].GetComponent<Rigidbody>().isKinematic = false;
-            Inventory[CurrentObject].GetComponent<MeshCollider>().enabled = true;
+            Inventory[CurrentObject].GetComponent<Collider>().enabled = true;
             Inventory[CurrentObject].transform.position = HandObject.transform.position;
             Inventory[CurrentObject].transform.rotation = HandObject.transform.rotation;
             Inventory[CurrentObject] = null;

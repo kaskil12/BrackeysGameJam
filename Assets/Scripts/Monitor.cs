@@ -27,7 +27,9 @@ public class Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Anim = GetComponent<Animator>();
+        Agent = GetComponent<NavMeshAgent>();
+        player = GameObject.Find("Player").GetComponent<PlayerMovement>();
     }
 
     // Update is called once per frame
@@ -58,7 +60,7 @@ public class Script : MonoBehaviour
     public void Attack(){
         if(Vector3.Distance(transform.position, player.transform.position) <= AttackRange && CanAttack){
             Anim.SetBool("Attack", true);
-            AttackSound.Play();
+            if(!AttackSound.isPlaying)AttackSound.Play();
             player.TakeDamage(Damage);
             //Delay between attacks
             Agent.speed = 0;
@@ -73,12 +75,14 @@ public class Script : MonoBehaviour
         CanAttack = true;
     }
     public void Chase(){
-        if(Vector3.Distance(transform.position, player.transform.position) <= ChaseRange){
+        if(Vector3.Distance(transform.position, player.transform.position) <= ChaseRange && Physics.Raycast(transform.position, player.transform.position - transform.position, out RaycastHit hit, ChaseRange) && hit.transform.tag == "Player"){
             Agent.speed = Speed;
             Agent.SetDestination(player.transform.position);
             Anim.SetBool("Chase", true);
-            ChaseSound.Play();
         }
+    }
+    public void PlayRunSound(){
+        ChaseSound.Play();
     }
     public void Idle(){
         Agent.speed = 0;
