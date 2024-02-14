@@ -20,11 +20,6 @@ public class RoomBehaviour : MonoBehaviour
             }
         }
     }
-    //in update spawn the furnitre and set the position to the random position and only do this once
-    void Update(){
-        //if the room is not empty
-
-    }
     public GameObject[] walls; // 0 - Up 1 - Down 2 - Right 3 - Left
     public GameObject[] doors;
     public bool[] testStaus;

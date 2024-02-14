@@ -192,7 +192,7 @@ MonoBehaviour:
   StaplerReloadTime: 3
   StaplerFireRate: 1
   StaplerRange: 40
-  StaplerEquipped: 1
+  StaplerEquipped: 0
   StaplerReloading: 0
   StaplerFiring: 0
   MainCamera: {fileID: 963194227}
@@ -205,7 +205,7 @@ Transform:
   m_GameObject: {fileID: 42412916}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.0046427, y: 1.0697236, z: -0.3129872}
+  m_LocalPosition: {x: -1.31, y: 1.0697236, z: 4.81}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
