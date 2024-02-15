@@ -69,6 +69,8 @@ public class PlayerMovement : MonoBehaviour
     public AudioSource KeyPickup;
     public AudioSource HitSound;
 
+    public GameObject[] obj;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -86,11 +88,47 @@ public class PlayerMovement : MonoBehaviour
         Cursor.visible = false;
         Looks = true;
         speed = 50;
+        //obj is every renderer in the scene
+        // obj = FindObjectsOfType<Renderer>().gameObject;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // foreach (GameObject obj in GameObject.FindObjectsOfType<GameObject>())
+        // {
+        //     // Check for null reference
+        //     if (obj != null)
+        //     {
+        //         // Attempt to get Collider and MeshRenderer components
+        //         Collider objCollider = obj.GetComponent<Collider>();
+        //         MeshRenderer objRenderer = obj.GetComponent<MeshRenderer>();
+
+        //         // Check for null references before using components
+        //         if (objCollider != null && objRenderer != null)
+        //         {
+        //             Plane[] planes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+
+        //             if (GeometryUtility.TestPlanesAABB(planes, objCollider.bounds))
+        //             {
+        //                 // Object is inside the camera frustum
+        //                 //print("The object " + obj.name + " has appeared");
+        //                 objRenderer.enabled = true;
+        //             }
+        //             else
+        //             {
+        //                 // Object is outside the camera frustum
+        //                 //print("The object " + obj.name + " has disappeared");
+        //                 objRenderer.enabled = false;
+        //             }
+        //         }
+        //         else
+        //         {
+        //             // Handle the case where either the Collider or MeshRenderer is missing
+        //             Debug.LogWarning("Collider or MeshRenderer missing on object: " + obj.name);
+        //         }
+        //     }
+        // }
         Color color = HitEffectColor;
         HitEffect.color = color;
 

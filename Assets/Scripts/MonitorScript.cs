@@ -15,6 +15,8 @@ public class MonitorScript : MonoBehaviour
     public AudioSource AttackSound;
     public AudioSource DeathSound;
     public AudioSource HurtSound;
+    public ParticleSystem ExplodeEffect;
+    bool Died = false;
     [Header(" Stats")]
     public float Health;
     public float Damage;
@@ -27,23 +29,27 @@ public class MonitorScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Died = false;
         Anim = GetComponent<Animator>();
         Agent = GetComponent<NavMeshAgent>();
         player = GameObject.Find("Player").GetComponent<PlayerMovement>();
+        Agent.enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         HealthVoid();
-        if(Agent.enabled){
-            if(Vector3.Distance(transform.position, player.transform.position) <= AttackRange){
-                Attack();
-            }else if(Vector3.Distance(transform.position, player.transform.position) <= ChaseRange){
-                Chase();
-            }else{
-                Idle();
-            }
+        if(Vector3.Distance(transform.position, player.transform.position) <= AttackRange){
+            if(transform.parent != null)transform.parent = null;
+            if(!Agent.enabled)Agent.enabled = true;
+            Attack();
+        }else if(Vector3.Distance(transform.position, player.transform.position) <= ChaseRange){
+            if(transform.parent != null)transform.parent = null;
+            if(!Agent.enabled)Agent.enabled = true;
+            Chase();
+        }else{
+            Idle();
         }
 
     }
@@ -94,7 +100,11 @@ public class MonitorScript : MonoBehaviour
         HurtSound.Play();
     }
     IEnumerator Delay(){
+        if(!Died){
+        Died = true;
+        ExplodeEffect.Play();
         yield return new WaitForSeconds(3);
         Destroy(gameObject);
+        }
     }
 }
