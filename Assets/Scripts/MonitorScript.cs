@@ -16,6 +16,7 @@ public class MonitorScript : MonoBehaviour
     public AudioSource DeathSound;
     public AudioSource HurtSound;
     public ParticleSystem ExplodeEffect;
+    public GameObject EnergySphere;
     bool Died = false;
     [Header(" Stats")]
     public float Health;
@@ -103,6 +104,7 @@ public class MonitorScript : MonoBehaviour
         if(!Died){
         Died = true;
         ExplodeEffect.Play();
+        GameObject Sphere = Instantiate(EnergySphere, transform.position, Quaternion.identity);
         yield return new WaitForSeconds(3);
         Destroy(gameObject);
         }

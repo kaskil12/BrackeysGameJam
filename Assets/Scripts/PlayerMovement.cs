@@ -70,6 +70,9 @@ public class PlayerMovement : MonoBehaviour
     public AudioSource HitSound;
 
     public GameObject[] obj;
+    [Header("EnergyPerks")]
+    public float Energy;
+
 
     // Start is called before the first frame update
     void Start()
@@ -193,6 +196,14 @@ public class PlayerMovement : MonoBehaviour
                     if(Input.GetKeyDown(KeyCode.E)){
                         HandPickup(InteractionHit.transform.root.gameObject);
                     }   
+                
+            }else if(InteractionHit.transform.tag =="EnergySphere"){
+                InteractionText.gameObject.SetActive(true);
+                InteractionText.text = "(E) To Pick Up";
+                if(Input.GetKeyDown(KeyCode.E)){
+                    Energy += 1;
+                    InteractionHit.transform.gameObject.SetActive(false);
+                }
                 
             }else{
                 InteractionText.gameObject.SetActive(false);
