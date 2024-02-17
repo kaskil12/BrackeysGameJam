@@ -43,7 +43,7 @@ public class StaplerScript : MonoBehaviour
             Reload();
         }
         
-        if(Input.GetMouseButtonDown(0) && StaplerAmmo > 0 && !StaplerFiring){
+        if(Input.GetMouseButtonDown(0) && StaplerAmmo > 0 && !StaplerFiring && !StaplerReloading){
             Fire();
         }
     }

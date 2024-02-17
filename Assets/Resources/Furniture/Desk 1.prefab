@@ -59,6 +59,8 @@ MonoBehaviour:
   DeathSound: {fileID: 7841210657478441474}
   HurtSound: {fileID: 8676673840370406557}
   ExplodeEffect: {fileID: 8467641995117016214}
+  EnergySphere: {fileID: 1881137198564080829, guid: 8be36005158ef4542b199cde66baadfe, type: 3}
+  Died: 0
   Health: 50
   Damage: 20
   Speed: 2

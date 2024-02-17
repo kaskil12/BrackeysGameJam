@@ -17,7 +17,7 @@ public class MonitorScript : MonoBehaviour
     public AudioSource HurtSound;
     public ParticleSystem ExplodeEffect;
     public GameObject EnergySphere;
-    bool Died = false;
+    public bool Died = false;
     [Header(" Stats")]
     public float Health;
     public float Damage;
