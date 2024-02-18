@@ -63,9 +63,9 @@ MonoBehaviour:
   Died: 0
   Health: 50
   Damage: 20
-  Speed: 2
+  Speed: 1
   AttackRange: 2
-  ChaseRange: 5
+  ChaseRange: 10
   AttackTimer: 3
 --- !u!195 &2715124210725677869
 NavMeshAgent:

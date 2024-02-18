@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("PlayerComponents")]
     public GameObject HandObject;
     public float Health = 100;
+    public float MaxHealth = 100;
     public bool Walking;
     public bool Running;
     public float CapsuleHeight;
@@ -55,6 +56,7 @@ public class PlayerMovement : MonoBehaviour
     public float RayLength = 10;
 
     [Header("UI")]
+    public TMP_Text PerkMessageText;
     public TMP_Text InteractionText;
     //Icons displaying items in inventory
     public Image[] InventoryIcons;
@@ -140,12 +142,9 @@ public class PlayerMovement : MonoBehaviour
         IconDisplay();
         Jumping();
         //Fade the hit effect
-        if(HitEffectColor.a > 0){
-            Debug.Log(HitEffectColor.a + " Hit Effect Color");
-            HitEffectColor = new Color(HitEffectColor.r, HitEffectColor.g, HitEffectColor.b, Mathf.Lerp(HitEffectColor.a, 0, 0.3f * Time.deltaTime));
-        }
-        if(Health < 100){
-            Health += 0.1f * Time.deltaTime;
+        UpdateHitEffectColor();
+        if(Health < MaxHealth){
+            Health += 1f * Time.deltaTime;
         }
         if(rb.velocity.magnitude > 0.1f && IsGrounded && !Footsteps.isPlaying && !Running){
             Footsteps.Play();
@@ -212,6 +211,70 @@ public class PlayerMovement : MonoBehaviour
             InteractionText.gameObject.SetActive(false);
         }
     }
+    public void PerkVoid()
+    {
+        int perk = Random.Range(0, 4);
+
+        switch (perk)
+        {
+            case 0:
+                // Increase jump force
+                JumpPower *= 1.2f; // Increase by 20%
+                sendPerkMessage("Jump Force Increased");
+                Debug.Log("Jump Force Increased" + JumpPower);
+                break;
+            case 1:
+                // Increase speed
+                speed *= 1.2f; // Increase by 20%
+                sendPerkMessage("Speed Increased");
+                Debug.Log("Speed Increased" + speed);
+                break;
+            case 2:
+                // Increase health
+                MaxHealth *= 1.1f; // Increase by 20%
+                sendPerkMessage("Health Increased");
+                Debug.Log("Health Increased" + MaxHealth);
+                break;
+            case 3:
+                // Increase attack damage
+                if (Inventory[CurrentObject] != null)
+                {
+                    StaplerScript stapler = Inventory[CurrentObject].GetComponent<StaplerScript>();
+                    if (stapler != null)
+                    {
+                        stapler.StaplerDamage *= 1.5f; // Increase by 30%
+                        sendPerkMessage("Stapler Damage Increased");
+                        Debug.Log("Stapler Damage Increased" + stapler.StaplerDamage);
+                    }else{
+                        Debug.Log("Perk not found");
+                        PerkVoid();
+                    }
+                }else{
+                    Debug.Log("Perk not found");
+                    PerkVoid();
+                }
+                break;
+            case 4:
+                if (Inventory[CurrentObject] != null)
+                {
+                    //increase attack speed of the weapon in the inventory
+                    StaplerScript staplerFire = Inventory[CurrentObject].GetComponent<StaplerScript>();
+                    if (staplerFire != null)
+                    {
+                        staplerFire.StaplerFireRate *= 1.5f; // Increase by 10%
+                        sendPerkMessage("Stapler Fire Rate Increased");
+                        Debug.Log("Stapler Fire Rate Increased" + staplerFire.StaplerFireRate);
+                    }else{
+                        Debug.Log("Perk not found");
+                        PerkVoid();
+                    }           
+                }else{
+                    Debug.Log("Perk not found");
+                    PerkVoid();
+                }
+                break;
+        }
+    }
     void IconDisplay(){
         //Get the image from each inventory item and display it in the UI
         // if (Inventory[CurrentObject] != null){
@@ -230,13 +293,16 @@ public class PlayerMovement : MonoBehaviour
     public void TakeDamage(float Damage){
         Health -= Damage;
         HitSound.Play();
-        HitEffectPlay();
+        
         if(Health <= 0){
             Die();
         }
     }
-    public void HitEffectPlay(){
-        HitEffectColor = new Color(HitEffectColor.r, HitEffectColor.g, HitEffectColor.b, +.3f);
+    void UpdateHitEffectColor()
+    {
+        float healthPercentage = Health / MaxHealth;
+        HitEffectColor.a = 1 - healthPercentage;
+        HitEffect.color = HitEffectColor;
     }
     void Die(){
         SendMessage("You Died");
@@ -317,6 +383,14 @@ public class PlayerMovement : MonoBehaviour
     public void SendMessage(string Message){
         MessageText.text = Message;
         StartCoroutine(MessageDelay());
+    }
+    public void sendPerkMessage(string Message){
+        PerkMessageText.text = Message;
+        StartCoroutine(SendPerDelay());
+    }
+    IEnumerator SendPerDelay(){
+        yield return new WaitForSeconds(3);
+        PerkMessageText.text = "";
     }
     IEnumerator MessageDelay(){
         yield return new WaitForSeconds(3);

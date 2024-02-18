@@ -104,7 +104,7 @@ public class MonitorScript : MonoBehaviour
         if(!Died){
         Died = true;
         ExplodeEffect.Play();
-        GameObject Sphere = Instantiate(EnergySphere, transform.position, Quaternion.identity);
+        // GameObject Sphere = Instantiate(EnergySphere, transform.position, Quaternion.identity);
         yield return new WaitForSeconds(3);
         Destroy(gameObject);
         }
