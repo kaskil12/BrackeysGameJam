@@ -17,13 +17,18 @@ public class RoomGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        int width = PlayerPrefs.GetInt("Width", 10); // 10 is a default value
+        int height = PlayerPrefs.GetInt("Height", 10); // 10 is a default value
+        size = new Vector2(width, height);
         MazeGenerator();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        int width = PlayerPrefs.GetInt("Width", 10); // 10 is a default value
+        int height = PlayerPrefs.GetInt("Height", 10); // 10 is a default value
+        size = new Vector2(width, height);
     }
 
     void GenerateDungeon(){

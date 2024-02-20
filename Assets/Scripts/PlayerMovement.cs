@@ -310,7 +310,10 @@ public class PlayerMovement : MonoBehaviour
     }
     IEnumerator Delay(){
         yield return new WaitForSeconds(3);
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
+        //Unlock the cursor
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
     void ChangeCurrentObject(int NewCurrentObject){
         if(Inventory[NewCurrentObject] == null){
